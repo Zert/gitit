@@ -441,7 +441,7 @@ handleRedirects page = case lookup "redirect" (pageMeta page) of
             redirect' <- lookup "redirect" params
             guard $ redirect' == "yes"
             path' <- stripPrefix (base' ++ "/") (uriPath uri)
-            let path'' = if null path' then frontPage cfg else urlDecode path'
+            let path'' = if null path' then urlDecode (frontPage cfg) else urlDecode path'
             guard $ isPage path''
             return path''
     withBody = setContentType "text/html; charset=utf-8" . toResponse

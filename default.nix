@@ -1,8 +1,3 @@
-with import <nixpkgs> {};
-let gitit =
-
-# Just use this middle part when embedding in nixpkgs:
-
 { fetchgit, haskellngPackages, graphviz }:
 
 haskellngPackages.mkDerivation {
@@ -29,5 +24,3 @@ haskellngPackages.mkDerivation {
   license     = "GPL";
   platforms   = haskellngPackages.ghc.meta.platforms;
 }
-
-; in callPackage gitit {}

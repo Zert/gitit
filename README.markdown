@@ -1,6 +1,12 @@
 Gitit
 =====
 
+TODO: files plugin should have limit="int" to show recent files only
+TODO: add heuristics for row/col headers to csv plugin
+        assume no header if first row is numbers
+        assume both if first cell is empty but surrounding ones aren't
+          if both, don't fill in the first square at all?
+
 This is my fork of [gitit][1].
 I'm using it as the basis of my [electronic lab notebook][2],
 and also trying to contribute back some plugins and other
@@ -29,6 +35,8 @@ Things I still intend to do but haven't gotten around to:
 
 * SPARQL plugin on top of the CSV one so you can dynamically load queries
   as tables. Will be useful for keeping track of plates, plasmids, etc.
+
+* Add optional horizontal headers on CSV files
 
 [1]: http://github.com/jgm/gitit
 [2]: https://github.com/jefdaj/jeffwiki
