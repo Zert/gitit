@@ -20,12 +20,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 {- Functions for loading plugins.
 -}
 
-module Network.Gitit.Plugins ( loadPlugin, loadPlugins )
+-- TODO: epic idea: *all* citations become links if there are pages
+
+module Network.Gitit.Plugins ( loadPlugin, loadPlugins, compiledPlugins )
 where
 import Network.Gitit.Types
 import System.FilePath (takeBaseName)
 import Control.Monad (unless)
 import System.Log.Logger (logM, Priority(..))
+import qualified Network.Gitit.Plugin.CiteProc as CiteProc
+import qualified Network.Gitit.Plugin.Csv as Csv
+import qualified Network.Gitit.Plugin.Dot as Dot
+import qualified Network.Gitit.Plugin.MTable as MTable
+import qualified Network.Gitit.Plugin.Files as Files
 #ifdef _PLUGINS
 import Data.List (isInfixOf, isPrefixOf)
 import GHC
@@ -84,9 +91,19 @@ loadPlugin pluginName = do
 
 #endif
 
+-- TODO: get RelatedFiles working 
+-- TODO: get CiteLinks working (and absorb into CiteProc?)
+compiledPlugins :: [Plugin]
+compiledPlugins =
+  [ CiteProc.plugin
+  , Csv.plugin
+  , Dot.plugin
+  , Files.plugin
+  , MTable.plugin
+  ]
+
 loadPlugins :: [FilePath] -> IO [Plugin]
 loadPlugins pluginNames = do
   plugins' <- mapM loadPlugin pluginNames
   unless (null pluginNames) $ logM "gitit" WARNING "Finished loading plugins."
-  return plugins'
-
+  return $ plugins'

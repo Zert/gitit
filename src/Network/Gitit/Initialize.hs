@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 module Network.Gitit.Initialize ( initializeGititState
                                 , recompilePageTemplate
                                 , compilePageTemplate
+                                , createCacheIfMissing
                                 , createStaticIfMissing
                                 , createRepoIfMissing
                                 , createDefaultPages
@@ -56,6 +57,7 @@ initializeGititState conf = do
   let userFile' = userFile conf
       pluginModules' = pluginModules conf
   plugins' <- loadPlugins pluginModules'
+  let plugins'' = compiledPlugins ++ plugins'
 
   userFileExists <- doesFileExist userFile'
   users' <- if userFileExists
@@ -68,7 +70,7 @@ initializeGititState conf = do
                              , users         = users'
                              , templatesPath = templatesDir conf
                              , renderPage    = defaultRenderPage templ
-                             , plugins       = plugins' }
+                             , plugins       = plugins'' }
 
 -- | Recompile the page template.
 recompilePageTemplate :: IO ()
@@ -93,6 +95,11 @@ compilePageTemplate tempsDir = do
   case T.getStringTemplate "page" combinedGroup of
         Just t    -> return t
         Nothing   -> error "Could not get string template"
+
+createCacheIfMissing :: Config -> IO ()
+createCacheIfMissing c = do
+  createDirectoryIfMissing True $ cacheDir c
+  createDirectoryIfMissing True $ cacheDir c </> "img"
 
 -- | Create templates dir if it doesn't exist.
 createTemplateIfMissing :: Config -> IO ()
